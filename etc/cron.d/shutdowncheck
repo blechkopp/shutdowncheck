@@ -1,0 +1,1 @@
+*/10 * * * * root python3 /root/shutdowncheck.py --shutdowncheck
