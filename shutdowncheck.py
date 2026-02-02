@@ -118,7 +118,7 @@ def printHelp():
 def is_container_running(container_name):
     try:
         # Führt den Befehl 'pct list' aus, der alle LXC-Container anzeigt
-        result = subprocess.run(['pct', 'list'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(['/usr/sbin/pct', 'list'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
         # Überprüfen, ob der Containername in der Ausgabe vorhanden ist und ob der Status "running" ist
         if result.returncode == 0:
