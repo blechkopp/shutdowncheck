@@ -15,19 +15,21 @@ CONFIG_FILE = "autoshutdown.conf"
 # ------------------------------------------------------------
 
 def serviceActive(iPort, sName, iMaxIdle):
-    try:
-        sOut = subprocess.check_output(
-            f'/bin/netstat --tcp --numeric | grep --count ":{iPort}"',
-            shell=True
-        )
-        iOut = int(sOut.decode())
-        bActive = (iOut > iMaxIdle)
-        log.info("%s: found=%d maxIdle=%d active=%d",
-                 sName, iOut, iMaxIdle, bActive)
-        return bActive
-    except subprocess.CalledProcessError as e:
-        log.info("%s: inactive (%s)", sName, e)
-    return False
+    result = subprocess.run(
+        f'/bin/netstat --tcp --numeric | grep --count ":{iPort}"',
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True
+    )
+
+    iOut = int(result.stdout.strip()) if result.stdout else 0
+    bActive = (iOut > iMaxIdle)
+
+    log.info("%s: found=%d maxIdle=%d active=%d",
+             sName, iOut, iMaxIdle, bActive)
+    return bActive
+
 
 
 def sambaActive(exclude_ips=None):
